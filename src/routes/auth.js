@@ -35,7 +35,7 @@ router.post(
 			const validPass = bcrypt.compareSync(password, usuario.password);
 			if (!validPass) {
 				return res
-					.status(200)
+					.status(400)
 					.json({ ok: false, msg: "contraseña no valida" });
 			}
 			// generar Token
@@ -47,6 +47,8 @@ router.post(
 
 			res.status(200).json({
 				ok: true,
+				name: usuario.firstName,
+				uid: usuario.id,
 				token,
 			});
 		} catch (error) {
@@ -88,7 +90,8 @@ router.post('/new', [
 
 	res.status(200).json({
 		ok: true,
-		msg: 'user Created',
+		name: usuario.firstName,
+		uid: usuario.id,
 		token,
 	});
 
@@ -107,7 +110,7 @@ router.get("/renew", validarToken, async (req, res) => {
 	});
 
 	// devolvemos el nuevo token
-	res.json({ ok: true, token });
+	res.json({ ok: true, uid, name, token });
 });
 
 module.exports = router;
